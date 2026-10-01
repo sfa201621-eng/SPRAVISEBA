@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Мій день</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    background:#08111f;
+    color:#f4f7ff;
+}
+
+.wrap{
+    max-width:1050px;
+    margin:auto;
+    padding:18px;
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:center;
+    margin-bottom:16px;
+}
+
+h1,h2{
+    margin:0 0 7px;
+}
+
+.sub,.muted{
+    color:#91a4c4;
+}
+
+.card{
+    background:#131e30;
+    border:1px solid #263750;
+    border-radius:20px;
+    padding:16px;
+    margin-bottom:15px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:10px;
+}
+
+input,select,button{
+    width:100%;
+    padding:12px;
+    border:1px solid #31435f;
+    border-radius:12px;
+    background:#0d1727;
+    color:white;
+    font:inherit;
+}
+
+button{
+    border:0;
+    font-weight:800;
+    cursor:pointer;
+    background:#263b5c;
+}
+
+button:hover{
+    filter:brightness(1.12);
+}
+
+.primary{
+    background:#2563eb;
+}
+
+.green{
+    background:#14804f;
+}
+
+.orange{
+    background:#a76b17;
+}
+
+.red{
+    background:#9f3342;
+}
+
+.form{
+    display:grid;
+    grid-template-columns:1.8fr .8fr .9fr auto;
+    gap:8px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+}
+
+.stat{
+    text-align:center;
+    background:#0c1626;
+    border-radius:15px;
+    padding:12px;
+}
+
+.num{
+    font-size:26px;
+    font-weight:900;
+}
+
+.task{
+    display:grid;
+    grid-template-columns:65px 1fr auto;
+    gap:12px;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid #263750;
+}
+
+.task:last-child{
+    border-bottom:0;
+}
+
+.time{
+    font-size:19px;
+    font-weight:900;
+}
+
+.name{
+    font-weight:800;
+}
+
+.note{
+    font-size:12px;
+    color:#91a4c4;
+    margin-top:3px;
+}
+
+.badge{
+    display:inline-block;
+    margin-top:7px;
+    padding:5px 9px;
+    border-radius:99px;
+    font-size:11px;
+    font-weight:900;
+}
+
+.todo{
+    background:#283953;
+    color:#c8d7ef;
+}
+
+.done{
+    background:#155d42;
+    color:#8ff0c4;
+}
+
+.late{
+    background:#754d18;
+    color:#ffd18b;
+}
+
+.skip{
+    background:#632c36;
+    color:#ffb5bf;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.actions button{
+    width:auto;
+    padding:8px 10px;
+    font-size:12px;
+}
+
+.photo{
+    display:block;
+    max-width:130px;
+    max-height:90px;
+    border-radius:10px;
+    margin-top:8px;
+}
+
+.empty{
+    text-align:center;
+    color:#91a4c4;
+    padding:25px;
+}
+
+.progress{
+    height:12px;
+    background:#26364f;
+    border-radius:20px;
+    overflow:hidden;
+    margin:10px 0;
+}
+
+.progress i{
+    display:block;
+    height:100%;
+    background:#35b77a;
+    width:0;
+}
+
+.report{
+    background:#0a1321;
+    border:1px solid #2b3c58;
+    border-radius:16px;
+    padding:17px;
+}
+
+.report-head{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.report-list{
+    margin-top:14px;
+}
+
+.report-row{
+    display:flex;
+    gap:10px;
+    padding:9px 0;
+    border-bottom:1px solid #263750;
+}
+
+.check{
+    font-weight:900;
+}
+
+.doneText{
+    color:#75e3ae;
+}
+
+.lateText{
+    color:#ffd18b;
+}
+
+.skipText{
+    color:#ff9eaa;
+}
+
+.bigpercent{
+    font-size:42px;
+    font-weight:950;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#000b;
+    z-index:20;
+    padding:18px;
+    overflow:auto;
+}
+
+.modal.show{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.modalbox{
+    width:min(650px,100%);
+    background:#111d2e;
+    border:1px solid #344967;
+    border-radius:22px;
+    padding:18px;
+}
+
+@media(max-width:700px){
+
+    .form{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .form input:first-child{
+        grid-column:1/-1;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .task{
+        grid-template-columns:55px 1fr;
+    }
+
+    .actions{
+        grid-column:2;
+        justify-content:flex-start;
+    }
+
+    .top{
+        align-items:flex-start;
+    }
+
+    .top>button{
+        width:auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="top">
+
+<div>
+
+<h1>📋 МІЙ ДЕНЬ</h1>
+
+<div class="sub">
+Твій особистий контроль справ
+</div>
+
+</div>
+
+<button
+class="primary"
+style="width:auto"
+onclick="openReport()">
+
+👨‍👩‍👦 Показати батькам
+
+</button>
+
+</div>
+
+
+<!-- ДАТА І ЦІЛЬ -->
+
+<div class="card">
+
+<div class="grid">
+
+<label>
+
+📅 Дата
+
+<br>
+
+<input
+id="date"
+type="date">
+
+</label>
+
+
+<label>
+
+🎯 Ціль дня
+
+<br>
+
+<input
+id="goal"
+placeholder="Наприклад: без косяків 😎">
+
+</label>
+
+</div>
+
+</div>
+
+
+<!-- ДОДАВАННЯ СПРАВ -->
+
+<div class="card">
+
+<h2>➕ Додати справу</h2>
+
+<div class="form">
+
+<input
+id="taskName"
+placeholder="Наприклад: зібрати речі на футбол">
+
+
+<input
+id="taskTime"
+type="time"
+value="17:00">
+
+
+<select id="priority">
+
+<option>
+Звичайна
+</option>
+
+<option>
+Важлива
+</option>
+
+<option>
+Дуже важлива
+</option>
+
+</select>
+
+
+<button
+class="primary"
+onclick="addTask()">
+
+Додати
+
+</button>
+
+</div>
+
+
+<div
+class="muted"
+style="margin-top:8px;font-size:13px">
+
+Ти сам додаєш усе, що маєш зробити за день.
+
+</div>
+
+</div>
+
+
+<!-- СТАТИСТИКА -->
+
+<div class="card">
+
+<div class="stats">
+
+<div class="stat">
+
+<div
+class="num"
+id="total">
+
+0
+
+</div>
+
+усього
+
+</div>
+
+
+<div class="stat">
+
+<div
+class="num"
+id="done">
+
+0
+
+</div>
+
+виконано
+
+</div>
+
+
+<div class="stat">
+
+<div
+class="num"
+id="late">
+
+0
+
+</div>
+
+не встиг
+
+</div>
+
+
+<div class="stat">
+
+<div
+class="num"
+id="percent">
+
+0%
+
+</div>
+
+результат
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- СПИСОК СПРАВ -->
+
+<div class="card">
+
+<h2>🗓️ План на день</h2>
+
+<div id="tasks"></div>
+
+</div>
+
+
+<!-- ШВИДКИЙ ЗВІТ -->
+
+<div class="card">
+
+<h2>👨‍👩‍👦 Швидкий звіт</h2>
+
+<div id="miniReport"></div>
+
+<button
+class="primary"
+style="margin-top:10px"
+onclick="openReport()">
+
+📱 Відкрити повний звіт
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ВІКНО ЗВІТУ -->
+
+<div
+class="modal"
+id="modal">
+
+<div class="modalbox">
+
+
+<div class="report-head">
+
+<div>
+
+<h2>
+📋 ЗВІТ ЗА ДЕНЬ
+</h2>
+
+<div
+class="muted"
+id="reportDate">
+</div>
+
+</div>
+
+
+<button
+style="width:auto"
+onclick="closeReport()">
+
+✕
+
+</button>
+
+</div>
+
+
+<div
+class="card"
+style="margin-top:14px;margin-bottom:10px">
+
+<div class="muted">
+Результат
+</div>
+
+
+<div
+class="bigpercent"
+id="bigPercent">
+
+0%
+
+</div>
+
+
+<div class="progress">
+
+<i id="bar"></i>
+
+</div>
+
+
+<div id="reportStats"></div>
+
+</div>
+
+
+<div class="card">
+
+<div class="muted">
+🎯 Ціль дня
+</div>
+
+<div
+id="reportGoal"
+style="font-weight:800;margin-top:5px">
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="muted">
+📋 Виконані та невиконані справи
+</div>
+
+<div
+class="report-list"
+id="reportList">
+
+</div>
+
+</div>
+
+
+<div class="grid">
+
+<button
+onclick="copyReport()">
+
+📋 Скопіювати
+
+</button>
+
+
+<button
+class="primary"
+onclick="printReport()">
+
+🖨️ Друк / PDF
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const KEY="myDay_v2";
+
+
+let db=JSON.parse(
+
+localStorage.getItem(KEY)
+
+||
+
+'{"days":{}}'
+
+);
+
+
+const dateEl=
+document.getElementById("date");
+
+
+dateEl.value=
+new Date()
+.toISOString()
+.slice(0,10);
+
+
+
+/* ОТРИМАТИ ДЕНЬ */
+
+function day(){
+
+if(!db.days[dateEl.value]){
+
+db.days[dateEl.value]={
+
+goal:"",
+tasks:[]
+
+};
+
+}
+
+return db.days[dateEl.value];
+
+}
+
+
+
+/* ЗБЕРЕГТИ */
+
+function save(){
+
+localStorage.setItem(
+
+KEY,
+
+JSON.stringify(db)
+
+);
+
+render();
+
+}
+
+
+
+/* БЕЗПЕЧНИЙ ТЕКСТ */
+
+function esc(s){
+
+return String(s).replace(
+
+/[&<>"']/g,
+
+m=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+
+}[m])
+
+);
+
+}
+
+
+
+/* ДОДАТИ СПРАВУ */
+
+function addTask(){
+
+const name=
+
+document
+.getElementById("taskName")
+.value
+.trim();
+
+
+if(!name){
+
+alert(
+"Напиши назву справи."
+);
+
+return;
+
+}
+
+
+day().tasks.push({
+
+id:Date.now(),
+
+name:name,
+
+time:
+document
+.getElementById("taskTime")
+.value,
+
+priority:
+document
+.getElementById("priority")
+.value,
+
+status:"todo",
+
+photo:null,
+
+finished:null
+
+});
+
+
+document
+.getElementById("taskName")
+.value="";
+
+
+save();
+
+}
+
+
+
+/* ЗМІНА СТАТУСУ */
+
+function setStatus(id,status){
+
+const t=
+day()
+.tasks
+.find(x=>x.id===id);
+
+
+if(!t)return;
+
+
+t.status=status;
+
+
+t.finished=
+
+status==="done"
+
+?
+
+new Date()
+.toLocaleTimeString(
+"uk-UA",
+{
+hour:"2-digit",
+minute:"2-digit"
+}
+)
+
+:
+
+null;
+
+
+save();
+
+}
+
+
+
+/* ВИДАЛИТИ */
+
+function delTask(id){
+
+day().tasks=
+
+day()
+.tasks
+.filter(x=>x.id!==id);
+
+
+save();
+
+}
+
+
+
+/* ФОТО */
+
+function addPhoto(id,input){
+
+const file=input.files[0];
+
+
+if(!file)return;
+
+
+if(file.size>900000){
+
+alert(
+"Фото завелике. " +
+"Вибери фото до 900 КБ."
+);
+
+return;
+
+}
+
+
+const r=new FileReader();
+
+
+r.onload=()=>{
+
+const t=
+
+day()
+.tasks
+.find(x=>x.id===id);
+
+
+t.photo=r.result;
+
+
+save();
+
+};
+
+
+r.readAsDataURL(file);
+
+}
+
+
+
+/* СТАТУС */
+
+function statusText(s){
+
+if(s==="done")
+return "ВИКОНАНО";
+
+if(s==="late")
+return "НЕ ВСТИГ";
+
+if(s==="skip")
+return "ПРОПУЩЕНО";
+
+return "ОЧІКУЄ";
+
+}
+
+
+
+/* РЕНДЕР */
+
+function render(){
+
+const d=day();
+
+
+document
+.getElementById("goal")
+.value=d.goal||"";
+
+
+const arr=[...d.tasks]
+.sort(
+
+(a,b)=>
+
+(a.time||"")
+.localeCompare(
+b.time||""
+)
+
+);
+
+
+document
+.getElementById("tasks")
+.innerHTML=
+
+
+arr.length
+
+
+?
+
+
+arr.map(t=>`
+
+<div class="task">
+
+
+<div class="time">
+
+${t.time||"--:--"}
+
+</div>
+
+
+<div>
+
+
+<div class="name">
+
+${esc(t.name)}
+
+</div>
+
+
+<div class="note">
+
+${esc(t.priority)}
+
+${t.finished
+?
+" · виконано о "+t.finished
+:
+""}
+
+</div>
+
+
+<span
+class="badge ${t.status}">
+
+${statusText(t.status)}
+
+</span>
+
+
+${
+t.photo
+
+?
+
+`
+
+<img
+class="photo"
+src="${t.photo}"
+alt="Фото">
+
+`
+
+:
+
+""
+
+}
+
+
+</div>
+
+
+<div class="actions">
+
+
+<button
+class="green"
+onclick="setStatus(${t.id},'done')">
+
+✅ Зробив
+
+</button>
+
+
+<button
+class="orange"
+onclick="setStatus(${t.id},'late')">
+
+⏰ Не встиг
+
+</button>
+
+
+<button
+onclick="setStatus(${t.id},'skip')">
+
+⏭️ Пропустив
+
+</button>
+
+
+<label>
+
+<button
+onclick="this.nextElementSibling.click()">
+
+📷 Фото
+
+</button>
+
+
+<input
+type="file"
+accept="image/*"
+capture="environment"
+style="display:none"
+onchange="addPhoto(${t.id},this)">
+
+</label>
+
+
+<button
+class="red"
+onclick="delTask(${t.id})">
+
+✕
+
+</button>
+
+
+</div>
+
+
+</div>
+
+`)
+
+.join("")
+
+
+:
+
+`
+
+<div class="empty">
+
+Поки немає справ 👆
+
+<br>
+
+Додай першу!
+
+</div>
+
+`;
+
+
+
+/* СТАТИСТИКА */
+
+const total=d.tasks.length;
+
+
+const done=
+d.tasks
+.filter(
+t=>t.status==="done"
+)
+.length;
+
+
+const late=
+d.tasks
+.filter(
+t=>t.status==="late"
+)
+.length;
+
+
+const skip=
+d.tasks
+.filter(
+t=>t.status==="skip"
+)
+.length;
+
+
+const pct=
+total
+?
+Math.round(done/total*100)
+:
+0;
+
+
+document
+.getElementById("total")
+.textContent=total;
+
+
+document
+.getElementById("done")
+.textContent=done;
+
+
+document
+.getElementById("late")
+.textContent=late;
+
+
+document
+.getElementById("percent")
+.textContent=pct+"%";
+
+
+
+/* ШВИДКИЙ ЗВІТ */
+
+document
+.getElementById("miniReport")
+.innerHTML=`
+
+<div>
+
+<b>${done}</b>
+виконано з
+<b>${total}</b>
+
+·
+
+<b>${pct}%</b>
+
+</div>
+
+
+<div class="progress">
+
+<i
+style="width:${pct}%">
+
+</i>
+
+</div>
+
+
+<div class="muted">
+
+⏰ Не встиг: ${late}
+
+·
+
+⏭️ Пропущено: ${skip}
+
+</div>
+
+`;
+
+}
+
+
+
+/* ВІДКРИТИ ЗВІТ */
+
+function openReport(){
+
+const d=day();
+
+
+const total=d.tasks.length;
+
+
+const done=
+d.tasks
+.filter(
+t=>t.status==="done"
+)
+.length;
+
+
+const late=
+d.tasks
+.filter(
+t=>t.status==="late"
+)
+.length;
+
+
+const skip=
+d.tasks
+.filter(
+t=>t.status==="skip"
+)
+.length;
+
+
+const pct=
+total
+?
+Math.round(done/total*100)
+:
+0;
+
+
+
+document
+.getElementById("reportDate")
+.textContent=
+dateEl.value;
+
+
+document
+.getElementById("bigPercent")
+.textContent=
+pct+"%";
+
+
+document
+.getElementById("bar")
+.style.width=
+pct+"%";
+
+
+document
+.getElementById("reportStats")
+.textContent=
+
+`✅ ${done} виконано · `+
+`⏰ ${late} не встиг · `+
+`⏭️ ${skip} пропущено · `+
+`📋 ${total} всього`;
+
+
+document
+.getElementById("reportGoal")
+.textContent=
+d.goal ||
+"Ціль не вказана";
+
+
+
+const arr=
+[...d.tasks]
+.sort(
+
+(a,b)=>
+
+(a.time||"")
+.localeCompare(
+b.time||""
+)
+
+);
+
+
+document
+.getElementById("reportList")
+.innerHTML=
+
+
+arr.length
+
+
+?
+
+
+arr.map(t=>{
+
+const cls=
+
+t.status==="done"
+
+?
+"doneText"
+
+:
+
+t.status==="late"
+
+?
+"lateText"
+
+:
+
+t.status==="skip"
+
+?
+"skipText"
+
+:
+"";
+
+
+const icon=
+
+t.status==="done"
+
+?
+"✅"
+
+:
+
+t.status==="late"
+
+?
+"⏰"
+
+:
+
+t.status==="skip"
+
+?
+"⏭️"
+
+:
+"⬜";
+
+
+return `
+
+<div class="report-row">
+
+<span>
+
+${t.time||"--:--"}
+
+</span>
+
+
+<span
+style="flex:1">
+
+${esc(t.name)}
+
+</span>
+
+
+<span
+class="${cls} check">
+
+${icon}
+
+</span>
+
+</div>
+
+`;
+
+})
+
+
+.join("")
+
+
+:
+
+`
+
+<div class="muted">
+
+Справ немає.
+
+</div>
+
+`;
+
+
+
+document
+.getElementById("modal")
+.classList.add("show");
+
+}
+
+
+
+/* ЗАКРИТИ */
+
+function closeReport(){
+
+document
+.getElementById("modal")
+.classList
+.remove("show");
+
+}
+
+
+
+/* ТЕКСТ ЗВІТУ */
+
+function reportText(){
+
+const d=day();
+
+
+const total=d.tasks.length;
+
+
+const done=
+d.tasks
+.filter(
+t=>t.status==="done"
+)
+.length;
+
+
+const late=
+d.tasks
+.filter(
+t=>t.status==="late"
+)
+.length;
+
+
+const skip=
+d.tasks
+.filter(
+t=>t.status==="skip"
+)
+.length;
+
+
+const pct=
+total
+?
+Math.round(done/total*100)
+:
+0;
+
+
+return `
+
+📋 ЗВІТ ЗА ${dateEl.value}
+
+
+🎯 Ціль:
+
+${d.goal||"не вказана"}
+
+
+📊 РЕЗУЛЬТАТ:
+
+${pct}%
+
+
+✅ Виконано:
+${done}
+
+
+⏰ Не встиг:
+${late}
+
+
+⏭️ Пропущено:
+${skip}
+
+
+📋 Всього:
+${total}
+
+
+СПРАВИ:
+
+
+${
+d.tasks.length
+
+?
+
+d.tasks
+.map(
+
+t=>
+
+`${t.time||"--:--"} — ${t.name} — ${statusText(t.status)}`
+
+)
+.join("\n")
+
+:
+
+"Справ немає."
+
+}
+
+`;
+
+}
+
+
+
+/* КОПІЮВАТИ */
+
+function copyReport(){
+
+navigator
+.clipboard
+.writeText(
+reportText()
+)
+
+.then(()=>{
+
+alert(
+"Звіт скопійовано ✅"
+);
+
+})
+
+.catch(()=>{
+
+alert(
+reportText()
+);
+
+});
+
+}
+
+
+
+/* ДРУК / PDF */
+
+function printReport(){
+
+const text=
+reportText();
+
+
+const w=
+window.open(
+"",
+"_blank"
+);
+
+
+w.document.write(`
+
+<html>
+
+<head>
+
+<title>
+Мій день — звіт
+</title>
+
+
+<style>
+
+body{
+
+font:16px Arial;
+
+white-space:pre-wrap;
+
+padding:30px;
+
+line-height:1.6;
+
+}
+
+h1{
+
+font-size:25px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<h1>
+📋 МІЙ ДЕНЬ
+</h1>
+
+${esc(text)}
+
+</body>
+
+</html>
+
+`);
+
+
+w.document.close();
+
+w.print();
+
+}
+
+
+
+/* ДАТА */
+
+dateEl
+.addEventListener(
+"change",
+render
+);
+
+
+/* ЦІЛЬ */
+
+document
+.getElementById("goal")
+.addEventListener(
+"input",
+e=>{
+
+day().goal=
+e.target.value;
+
+
+localStorage.setItem(
+
+KEY,
+
+JSON.stringify(db)
+
+);
+
+});
+
+
+/* СТАРТ */
+
+render();
+
+</script>
+
+</body>
+</html>
